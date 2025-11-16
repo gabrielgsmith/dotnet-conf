@@ -1,0 +1,9 @@
+﻿global using System.Runtime.CompilerServices;
+global using Ardalis.SharedKernel;
+global using Aspire.DotnetConf.Core.ContributorAggregate;
+global using Aspire.DotnetConf.UseCases.Contributors.Create;
+global using Shouldly;
+global using Mediator;
+global using Microsoft.Extensions.Logging;
+global using NSubstitute;
+global using Xunit;

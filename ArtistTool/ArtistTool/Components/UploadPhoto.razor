@@ -1,0 +1,92 @@
+﻿@inject IImageManager ImageManager
+@rendermode InteractiveServer
+
+<div class="upload-header">
+    <h3>Upload your photographs</h3>
+    <p class="upload-summary">Upload up to 10 files (20 MB each). Supported formats: <span>.jpg, .jpeg, .gif, .tif, .tiff, .png</span>.</p>
+</div>
+
+<div class="upload-input-group">
+    <label class="upload-label">
+        <span>Select files to add them to your library</span>
+        <InputFile class="upload-input" OnChange="LoadFiles" multiple disabled="@isLoading" />
+    </label>
+</div>
+
+@if (isLoading)
+{
+    <p class="upload-status">Uploading...</p>
+}
+
+<div class="upload-results">
+    <h4>Results</h4>
+    <ul>
+        @foreach (var result in results)
+        {
+            <li>@result</li>
+        }
+    </ul>
+</div>
+
+<div class="upload-actions">
+    <button class="btn-secondary" @onclick="Done" disabled="@isLoading">Done</button>
+</div>
+
+@code {
+
+    [Parameter]
+    public bool AddingPhotographs { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> AddingPhotographsChanged { get; set; }
+
+    [Parameter]
+    public EventCallback OnCompleted { get; set; }
+
+    private List<string> results = [];
+    private long maxFileSize = 20 * Utility.Megabyte;
+    private int maxAllowedFiles = 10;
+    private bool isLoading;
+
+    private async Task LoadFiles(InputFileChangeEventArgs e)
+    {
+        var files = e.GetMultipleFiles(maxAllowedFiles);
+        isLoading = true;
+        StateHasChanged();
+        results.Clear();
+
+        foreach (var file in files)
+        {
+            try
+            {
+                await ImageManager.SaveImageAsync(
+                    file.Name,
+                    file.ContentType,
+                    async fs =>
+                    {
+                        await using var source = file.OpenReadStream(maxFileSize);
+                        await source.CopyToAsync(fs);
+                    });
+                results.Add($"Successfully loaded '{file.Name}' ({file.Size.AsByteSize()}) - {file.ContentType}");
+            }
+            catch (Exception ex)
+            {
+                results.Add($"Issue adding {file.Name}: {ex.Message}");
+            }
+        }
+
+        isLoading = false;
+        StateHasChanged();
+    }
+
+    private async Task Done()
+    {
+        if (isLoading) return;
+        AddingPhotographs = false;
+        await AddingPhotographsChanged.InvokeAsync(false);
+        if (OnCompleted.HasDelegate)
+        {
+            await OnCompleted.InvokeAsync();
+        }
+    }
+}

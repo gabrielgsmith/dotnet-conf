@@ -1,0 +1,33 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".template.config/template.json" />
+    <File Path="CleanArchitecture.nuspec" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Aspire.DotnetConf.Core/Aspire.DotnetConf.Core.csproj" />
+    <Project Path="src/Aspire.DotnetConf.Infrastructure/Aspire.DotnetConf.Infrastructure.csproj" />
+    <Project Path="src/Aspire.DotnetConf.UseCases/Aspire.DotnetConf.UseCases.csproj" />
+    <Project Path="src/Aspire.DotnetConf.Web/Aspire.DotnetConf.Web.csproj" />
+  </Folder>
+  <Folder Name="/src/_aspire/">
+    <Project Path="src/Aspire.DotnetConf.AspireHost/Aspire.DotnetConf.AspireHost.csproj" />
+    <Project Path="src/Aspire.DotnetConf.ServiceDefaults/Aspire.DotnetConf.ServiceDefaults.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Aspire.DotnetConf.FunctionalTests/Aspire.DotnetConf.FunctionalTests.csproj">
+      <BuildDependency Project="src/Aspire.DotnetConf.Web/Aspire.DotnetConf.Web.csproj" />
+    </Project>
+    <Project Path="tests/Aspire.DotnetConf.IntegrationTests/Aspire.DotnetConf.IntegrationTests.csproj">
+      <BuildDependency Project="src/Aspire.DotnetConf.Infrastructure/Aspire.DotnetConf.Infrastructure.csproj" />
+    </Project>
+    <Project Path="tests/Aspire.DotnetConf.UnitTests/Aspire.DotnetConf.UnitTests.csproj" />
+  </Folder>
+</Solution>
